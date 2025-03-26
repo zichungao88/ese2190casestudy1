@@ -45,8 +45,10 @@ function vdp_field(mu_array, initial_conditions)
     for i = 1:length(mu_array)
         mu = mu_array(i); % select each value of mu
         dx = y;
-        dy = mu * (1 - x.^2) .* y - x;
+        dy = mu * (1 - x^2) * y - x;
         L = sqrt(dx.^2 + dy.^2);
+
+        % normalize vectors for better visualization
         dx = dx ./ L;
         dy = dy ./ L;
 
@@ -80,11 +82,11 @@ y0 = [1; 0]; % initial conditions: x(0) = 1, dx/dt(0) = 0
 mu = 0; % only value of mu we wish to plot is 0
 [x, y] = meshgrid(linspace(-3, 3, 20), linspace(-3, 3, 20)); % create the vector field
 
-[t, z] = ode45(@(t, y) vdp(t, y, mu), time_range, y0); % solve
+[~, z] = ode45(@(t, y) vdp(t, y, mu), time_range, y0); % solve
 
 % initializing the vector field in x & y directions
 dxdt = y;
-dydt = mu * (1 - x.^2) .* y - x;
+dydt = mu * (1 - x^2) * y - x;
 
 % normalizing the vectors to better fit on the grid
 dxdt = dxdt ./ sqrt(dxdt.^2 + dydt.^2);
@@ -121,7 +123,7 @@ for i = 1:length(mu_range)
     
     % initialize vector field in x & y directions
     dxdt = y;
-    dydt = mu * (1 - x.^2) .* y - x;
+    dydt = mu * (1 - x^2) * y - x;
 
     % normalize vectors to better fit on grid
     dxdt = dxdt ./ sqrt(dxdt.^2 + dydt.^2);
@@ -131,8 +133,8 @@ for i = 1:length(mu_range)
     figure;
     hold on;
     quiver(x, y, dxdt, dydt, 'r', 'DisplayName', 'Vector Field'); % vector field lines
-    plot(z(:,1), z(:,2), 'b-', 'DisplayName', 'Trajectory'); % full trajectory
-    dot = plot(z(1,1), z(1,2), 'ro', 'MarkerFaceColor', 'g', ...
+    plot(z(:, 1), z(:, 2), 'b-', 'DisplayName', 'Trajectory'); % full trajectory
+    dot = plot(z(1, 1), z(1, 2), 'ro', 'MarkerFaceColor', 'g', ...
          'DisplayName', 'Current Position'); % moving point
 
     title(['Van der Pol Oscillator for \mu = ', num2str(mu)]);
@@ -150,3 +152,23 @@ for i = 1:length(mu_range)
 
     hold off;
 end
+
+
+%% Task 6: Verification of Calculated Limit Cycle Radius
+
+mu = 0.01; % small mu
+
+vanderpol = @(t, y) [y(2); mu * (1 - y(1)^2) * y(2) - y(1)];
+
+time_range = [0 1000]; % r converges to theoretical value as time range increases
+y0 = [1; 0];
+
+[t, y] = ode45(vanderpol, time_range, y0);
+
+r = sqrt(y(:, 1).^2 + y(:, 2).^2); % radius
+
+% estimate limit cycle radius as stable peak value
+% take max of r for stability purposes
+radius_estimate = max(r);
+
+disp(radius_estimate);
