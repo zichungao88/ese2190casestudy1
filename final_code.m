@@ -16,7 +16,7 @@ vdp_field([0.25 0.5 1 4], [0 1; 0 2; 0 3;]) % plot system as vector field
 % efficient
 function vdp_solution(mu_array, x0)
     time_range = [0, 20]; % time range from 0 to 20 (longer --> better deduction of trends
-    figure;
+    figure; % solution over time plots (4 total)
     for i = 1:length(mu_array)
         mu = mu_array(i); % select each value of mu
         [t, x] = ode45(@(t, x) [x(2); mu * (1 - x(1)^2) * x(2) - x(1)], time_range, x0); % solve
@@ -41,7 +41,7 @@ function vdp_field(mu_array, initial_conditions)
     [x, y] = meshgrid(linspace(x_min, x_max, 20), linspace(y_min, y_max, 20));
     sub_length = ceil(length(mu_array)/2);
     
-    figure;
+    figure; % phase portrait plots (4 total)
     for i = 1:length(mu_array)
         mu = mu_array(i); % select each value of mu
         dx = y;
@@ -61,9 +61,12 @@ function vdp_field(mu_array, initial_conditions)
         
         time_range = [0, 20];
         
+        % create limit cycles
         for j = 1:size(initial_conditions, 1)
+            % solve system for given mu
             [~, z] = ode45(@(t, x) [x(2); mu * (1 - x(1)^2) * x(2) - x(1)], ...
                 time_range, initial_conditions(j, :));
+            % plot limit cycle
             plot(z(: ,1), z(: ,2), 'LineWidth', 1.5, 'DisplayName', ['IC: [', ...
                 num2str(initial_conditions(j, 1)), ', ', num2str(initial_conditions(j, 2)), ']']);
         end
