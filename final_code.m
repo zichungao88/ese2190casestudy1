@@ -15,11 +15,11 @@ vdp_field([0.25 0.5 1 4], [0 1; 0 2; 0 3;]) % plot system as vector field
 % Stores the functions used in this program in order to make space more
 % efficient
 function vdp_solution(mu_array, x0)
-    tspan = [0 20]; % time range from 0 to 20
+    time_range = [0, 20]; % time range from 0 to 20 (longer --> better deduction of trends
     figure;
     for i = 1:length(mu_array)
         mu = mu_array(i); % select each value of mu
-        [t, x] = ode45(@(t, x) [x(2); mu * (1 - x(1)^2) * x(2) - x(1)], tspan, x0); % ode45 to solve
+        [t, x] = ode45(@(t, x) [x(2); mu * (1 - x(1)^2) * x(2) - x(1)], time_range, x0); % solve
         
         % 4-in-1 plot for concision, neatness, & ease of visualization
         subplot(ceil(length(mu_array)/2), ceil(length(mu_array)/2), i);
@@ -49,17 +49,21 @@ function vdp_field(mu_array, initial_conditions)
         L = sqrt(dx.^2 + dy.^2);
         dx = dx ./ L;
         dy = dy ./ L;
+
         subplot(sub_length, sub_length, i);
         quiver(x, y, dx, dy, 'b', 'LineWidth', 1.2, 'DisplayName', "Vector Field"); hold on;
         xlabel('x'); ylabel('dx/dt');
         title(['Phase Portrait: \mu = ', num2str(mu)]);
-        grid on; axis equal;
+        grid on;
+        axis equal;
         
-        tspan = [0 20];
+        time_range = [0, 20];
         
         for j = 1:size(initial_conditions, 1)
-            [~, sol] = ode45(@(t, X) [X(2); mu * (1 - X(1)^2) * X(2) - X(1)], tspan, initial_conditions(j, :));
-            plot(sol(:,1), sol(:,2), 'LineWidth', 1.5, 'DisplayName', ['IC: [', num2str(initial_conditions(j,1)), ', ', num2str(initial_conditions(j,2)), ']']);
+            [~, z] = ode45(@(t, x) [x(2); mu * (1 - x(1)^2) * x(2) - x(1)], ...
+                time_range, initial_conditions(j, :));
+            plot(z(: ,1), z(: ,2), 'LineWidth', 1.5, 'DisplayName', ['IC: [', ...
+                num2str(initial_conditions(j, 1)), ', ', num2str(initial_conditions(j, 2)), ']']);
         end
         legend;
     end
@@ -69,7 +73,36 @@ end
 %% Task 3: Vector Field & Trajectory for mu = 0 (Simple Harmonic motion)
 % These plots correspond to Figure 6 in the paper.
 
-% (to be inserted)
+vdp = @(t, y, mu) [y(2); mu * (1 - y(1)^2) * y(2) - y(1)];
+
+time_range = [0, 20];
+y0 = [1; 0]; % initial conditions: x(0) = 1, dx/dt(0) = 0
+mu = 0; % only value of mu we wish to plot is 0
+[x, y] = meshgrid(linspace(-3, 3, 20), linspace(-3, 3, 20)); % create the vector field
+
+[t, z] = ode45(@(t, y) vdp(t, y, mu), time_range, y0); % solve
+
+% initializing the vector field in x & y directions
+dxdt = y;
+dydt = mu * (1 - x.^2) .* y - x;
+
+% normalizing the vectors to better fit on the grid
+dxdt = dxdt ./ sqrt(dxdt.^2 + dydt.^2);
+dydt = dydt ./ sqrt(dxdt.^2 + dydt.^2);
+
+% plotting
+figure;
+hold on;
+quiver(x, y, dxdt, dydt, 'r', 'DisplayName', 'Vector Field');
+plot(z(:,1), z(:,2), 'b-', 'DisplayName', 'Trajectory');
+
+title('Van der Pol Oscillator for \mu = 0');
+xlabel('x');
+ylabel('dx/dt');
+legend('Location', 'Best');
+grid on;
+axis equal;
+hold off;
 
 
 %% Task 4: Limit Cycle Oscillations from mu = 0.01 to 100
