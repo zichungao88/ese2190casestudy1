@@ -12,6 +12,8 @@
 vdp_solution([0.25 0.5 1 4], [0 2]); % plot x and dx/dt
 vdp_field([0.25 0.5 1 4], [0 1; 0 2; 0 3;]) % plot system as vector field
 
+vdp_solution(1000, [0 2]); % comment out line 30 for mu = 1000
+
 % Stores the functions used in this program in order to make space more
 % efficient
 function vdp_solution(mu_array, x0)
@@ -25,7 +27,7 @@ function vdp_solution(mu_array, x0)
         subplot(ceil(length(mu_array)/2), ceil(length(mu_array)/2), i);
         hold on;
         plot(t, x(:,1), 'b', 'LineWidth', 1.5);
-        plot(t, x(:,2), 'r', 'LineWidth', 1.5);
+        plot(t, x(:,2), 'r', 'LineWidth', 1.5); % comment out this line when plotting mu = 1000
         xlabel('Time t'); ylabel('Solution');
         title(['Van der Pol: \mu = ', num2str(mu)]);
         legend('x', 'dx/dt');
@@ -152,7 +154,6 @@ for i = 1:length(mu_range)
         set(dot, 'XData', z(j, 1), 'YData', z(j, 2)); % update moving point
         pause(0.1); % control animation speed
     end
-
     hold off;
 end
 
