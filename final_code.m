@@ -12,7 +12,7 @@
 vdp_solution([0.25 0.5 1 4], [0 2]); % plot x and dx/dt
 vdp_field([0.25 0.5 1 4], [0 1; 0 2; 0 3;]) % plot system as vector field
 
-vdp_solution(1000, [0 2]); % comment out line 30 for mu = 1000
+vdp_solution(1000, [0 2]); % comment out line 29 for mu = 1000
 
 % store the functions used in this program in order to make space more efficient
 function vdp_solution(mu_array, x0)
@@ -27,8 +27,11 @@ function vdp_solution(mu_array, x0)
         hold on;
         plot(t, x(:,1), 'b', 'LineWidth', 1.5);
         plot(t, x(:,2), 'r', 'LineWidth', 1.5); % comment out this line when plotting mu = 1000
-        xlabel('Time t'); ylabel('Solution');
-        title(['Van der Pol: \mu = ', num2str(mu)]);
+        title(['Van der Pol: \mu = ', num2str(mu)], 'FontSize', 20);
+        xlabel('Time t', 'FontSize', 20);
+        ylabel('Solution', 'FontSize', 20);
+        ax = gca;
+        ax.FontSize = 18;
         legend('x', 'dx/dt');
         grid on;
         hold off;
@@ -54,9 +57,13 @@ function vdp_field(mu_array, initial_conditions)
         dy = dy ./ L;
 
         subplot(sub_length, sub_length, i);
-        quiver(x, y, dx, dy, 'b', 'LineWidth', 1.2, 'DisplayName', "Vector Field"); hold on;
-        xlabel('x'); ylabel('dx/dt');
-        title(['Phase Portrait: \mu = ', num2str(mu)]);
+        quiver(x, y, dx, dy, 'b', 'LineWidth', 1.2, 'DisplayName', "Vector Field");
+        hold on;
+        title(['Phase Portrait: \mu = ', num2str(mu)], 'FontSize', 20);
+        xlabel('x', 'FontSize', 20);
+        ylabel('dx/dt', 'FontSize', 20);
+        ax = gca;
+        ax.FontSize = 18;
         grid on;
         axis equal;
         
@@ -72,6 +79,7 @@ function vdp_field(mu_array, initial_conditions)
                 num2str(initial_conditions(j, 1)), ', ', num2str(initial_conditions(j, 2)), ']']);
         end
         legend;
+        hold off;
     end
 end
 
@@ -100,11 +108,13 @@ dydt = dydt ./ sqrt(dxdt.^2 + dydt.^2);
 figure;
 hold on;
 quiver(x, y, dxdt, dydt, 'r', 'DisplayName', 'Vector Field');
-plot(z(:,1), z(:,2), 'b-', 'DisplayName', 'Trajectory');
+plot(z(:,1), z(:,2), 'b', 'DisplayName', 'Trajectory', 'LineWidth', 2);
 
-title('Van der Pol Oscillator for \mu = 0');
-xlabel('x');
-ylabel('dx/dt');
+title('Van der Pol Oscillator for \mu = 0', 'FontSize', 20);
+xlabel('x', 'FontSize', 20);
+ylabel('dx/dt', 'FontSize', 20);
+ax = gca;
+ax.FontSize = 18;
 legend('Location', 'Best');
 grid on;
 axis equal;
@@ -141,9 +151,11 @@ for i = 1:length(mu_range)
     dot = plot(z(1, 1), z(1, 2), 'ro', 'MarkerFaceColor', 'g', ...
          'DisplayName', 'Current Position'); % moving point
 
-    title(['Van der Pol Oscillator for \mu = ', num2str(mu)]);
-    xlabel('x');
-    ylabel('dx/dt');
+    title(['Van der Pol Oscillator for \mu = ', num2str(mu)], 'FontSize', 20);
+    xlabel('x', 'FontSize', 20);
+    ylabel('dx/dt', 'FontSize', 20);
+    ax = gca;
+    ax.FontSize = 18;
     legend('Location', 'Best');
     grid on;
     axis equal;
