@@ -1,5 +1,5 @@
 %% Task 2: Initial Visualizations of Solutions & Phase Portraits
-% These plots correspond to Figures 2-4 in the paper.
+% These plots correspond to Figures 1-3 in the paper.
 
 % We will rewrite the VDP equation as a first order differential equation
 % We can write the VDP equation in vector form as:
@@ -14,8 +14,7 @@ vdp_field([0.25 0.5 1 4], [0 1; 0 2; 0 3;]) % plot system as vector field
 
 vdp_solution(1000, [0 2]); % comment out line 30 for mu = 1000
 
-% Stores the functions used in this program in order to make space more
-% efficient
+% store the functions used in this program in order to make space more efficient
 function vdp_solution(mu_array, x0)
     time_range = [0, 20]; % time range from 0 to 20 (longer --> better deduction of trends
     figure; % solution over time plots (4 total)
@@ -78,7 +77,7 @@ end
 
 
 %% Task 3: Vector Field & Trajectory for mu = 0 (Simple Harmonic motion)
-% These plots correspond to Figure 6 in the paper.
+% These plots correspond to Figure 4 in the paper.
 
 vdp = @(t, y, mu) [y(2); mu * (1 - y(1)^2) * y(2) - y(1)];
 
@@ -113,7 +112,7 @@ hold off;
 
 
 %% Task 4: Limit Cycle Oscillations from mu = 0.01 to 100
-% These plots correspond to Figures 7-16 in the paper.
+% These plots correspond to Figures 5-14 in the paper.
 
 vdp = @(t, y, mu) [y(2); mu * (1 - y(1)^2) * y(2) - y(1)];
 
